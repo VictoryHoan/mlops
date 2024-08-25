@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mushroom Edibility Predictor</title>
+</head>
+<body>
+    <h1>Mushroom Edibility Predictor</h1>
+    <form id="mushroomForm">
+        <label for="cap-shape">Cap Shape:</label>
+        <input type="text" id="cap-shape" name="cap-shape"><br>
+
+        <label for="cap-surface">Cap Surface:</label>
+        <input type="text" id="cap-surface" name="cap-surface"><br>
+
+        <label for="cap-color">Cap Color:</label>
+        <input type="text" id="cap-color" name="cap-color"><br>
+
+        <label for="bruises">Bruises:</label>
+        <input type="text" id="bruises" name="bruises"><br>
+
+        <label for="odor">Odor:</label>
+        <input type="text" id="odor" name="odor"><br>
+
+        <!-- Add other input fields as needed -->
+
+        <button type="button" onclick="submitForm()">Predict</button>
+    </form>
+    <p id="predictionResult"></p>
+
+    <script>
+        function submitForm() {
+            const formData = new FormData(document.getElementById('mushroomForm'));
+            const jsonData = {};
+
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('predictionResult').textContent = 
+                    'The mushroom is predicted to be: ' + data.prediction;
+            })
+            .catch(error => {
+                document.getElementById('predictionResult').textContent = 
+                    'Error: ' + error;
+            });
+        }
+    </script>
+</body>
+</html>
